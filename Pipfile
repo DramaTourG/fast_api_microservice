@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 uvicorn = {extras = ["standard"], version = "*"}
 fastapi = "*"
+sqlalchemy = "*"
+databases = {extras = ["postgresql"], version = "*"}
+psycopg2-binary = "*"
 
 [dev-packages]
 pytest = "*"
