@@ -1,5 +1,7 @@
+from datetime import datetime
+
 from marshmallow_sqlalchemy import SQLAlchemySchema, auto_field
-from sqlalchemy import Column, Table, Integer, String
+from sqlalchemy import Column, Table, Integer, String, DateTime
 
 from db.base import metadata
 
@@ -8,7 +10,7 @@ Users = Table('Users', metadata,
               Column('username', String(16), nullable=False),
               Column('email', String(60), unique=True, nullable=False),
               Column('password', String(500), nullable=False),
-              Column('register_date', String(50), nullable=False)
+              Column('register_date', DateTime, default=datetime.utcnow())
               )
 
 
