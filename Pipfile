@@ -9,6 +9,8 @@ fastapi = "*"
 sqlalchemy = "*"
 databases = {extras = ["postgresql"], version = "*"}
 psycopg2-binary = "*"
+marshmallow-sqlalchemy = "*"
+flake8 = "*"
 
 [dev-packages]
 pytest = "*"
