@@ -9,8 +9,9 @@ fastapi = "*"
 sqlalchemy = "*"
 databases = {extras = ["postgresql"], version = "*"}
 psycopg2-binary = "*"
-marshmallow-sqlalchemy = "*"
 flake8 = "*"
+pydantic = {extras = ["email"], version = "*"}
+bcrypt = "*"
 
 [dev-packages]
 pytest = "*"
