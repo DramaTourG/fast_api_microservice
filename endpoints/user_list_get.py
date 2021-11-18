@@ -2,7 +2,7 @@ from typing import List
 from fastapi import APIRouter, Depends
 from repositories.users_repo import UserRepo
 from .depends import get_user_repository
-from models.user import UserOut
+from models.user_models import UserOut
 
 router = APIRouter()
 

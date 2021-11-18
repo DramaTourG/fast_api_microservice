@@ -7,7 +7,7 @@ class UserOut(BaseModel):
     id: Optional[int] = None
     username: str
     email: EmailStr
-    register_date: datetime
+    register_date: Optional[datetime] = None
 
 
 class UserIn(BaseModel):
