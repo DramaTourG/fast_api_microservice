@@ -53,3 +53,10 @@ def test_update_all(test_user_repo):
     assert response['email'] == 'TESTuser3@example.com'
     assert response['username'] == 'TestUser3'
     assert response['id'] == 2
+
+
+def test_get_by_email(test_user_repo):
+    res = asyncio.run(test_user_repo.get_by_email('TESTuser3@example.com'))
+    user = dict(**res.dict())
+    assert type(res) == UserIn
+    assert user['username'] == "TestUser3"
