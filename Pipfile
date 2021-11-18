@@ -13,6 +13,7 @@ flake8 = "*"
 pydantic = {extras = ["email"], version = "*"}
 bcrypt = "*"
 asyncpg = "*"
+python-jose = {extras = ["cryptography"], version = "*"}
 
 [dev-packages]
 pytest = "*"
