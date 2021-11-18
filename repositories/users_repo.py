@@ -5,7 +5,7 @@ from sqlalchemy import select
 
 from core.security import password_hashing
 from db.users import Users
-from models.user import UserIn, UserOut
+from models.user_models import UserIn, UserOut
 from .base import BaseRepo
 
 
@@ -33,18 +33,14 @@ class UserRepo(BaseRepo):
         if user is not None:
             return UserOut.parse_obj(user)
 
-    async def update_all(self, user_id: int, u: UserIn) -> UserOut:
-        user = UserOut(id=user_id,
-                       username=u.username,
-                       email=u.email,
-                       password=password_hashing(u.password),
-                       register_date=datetime.utcnow())
-        values = {**user.dict()}
-        values.pop('id', None)
-        values.pop('register_date', None)
+    async def update_all(self, user_id: int, user: UserIn):
+        values = dict(**user.dict())
+        values['password'] = password_hashing(values['password'])
         query = Users.update().filter_by(id=user_id)
         await self.database.execute(query=query, values=values)
-        return user
+        values['id'] = user_id
+        print(f'\n\n\n {values} \n\n\n')
+        return values
 
     async def update_password(self):
         return
