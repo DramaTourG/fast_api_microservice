@@ -3,7 +3,7 @@ from sqlite3 import IntegrityError
 
 import pytest
 
-from models.user import UserIn, UserOut
+from models.user_models import UserIn, UserOut
 from repositories.users_repo import UserRepo
 
 
@@ -15,6 +15,7 @@ def test_user_repo(test_database):
 
 user1 = UserIn(username="TestUser", email="TESTuser@example.com", password="stringsthgk")
 user2 = UserIn(username="TestUser2", email="TESTuser2@example.com", password="stringsthgk")
+update_user = UserIn(username="TestUser3", email="TESTuser3@example.com", password="stringsthgk")
 
 
 def test_create(test_user_repo):
@@ -45,3 +46,10 @@ def test_get_by_id(test_user_repo):
     user = dict(**res.dict())
     assert type(res) == UserOut
     assert user['username'] == "TestUser2"
+
+
+def test_update_all(test_user_repo):
+    response = asyncio.run(test_user_repo.update_all(2, update_user))
+    assert response['email'] == 'TESTuser3@example.com'
+    assert response['username'] == 'TestUser3'
+    assert response['id'] == 2
