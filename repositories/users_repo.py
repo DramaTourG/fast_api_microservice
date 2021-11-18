@@ -33,6 +33,12 @@ class UserRepo(BaseRepo):
         if user is not None:
             return UserOut.parse_obj(user)
 
+    async def get_by_email(self, email: str) -> UserIn:
+        user_query = select(Users).filter_by(email=email)
+        user = await self.database.fetch_one(user_query)
+        if user is not None:
+            return UserIn.parse_obj(user)
+
     async def update_all(self, user_id: int, user: UserIn):
         values = dict(**user.dict())
         values['password'] = password_hashing(values['password'])
@@ -43,9 +49,6 @@ class UserRepo(BaseRepo):
         return values
 
     async def update_password(self):
-        return
-
-    async def get_by_email(self, email: str):
         return
 
     async def delete(self, user_id):
