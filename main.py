@@ -1,19 +1,12 @@
-from typing import Optional
 from fastapi import FastAPI
-from db.base import database
 import uvicorn
 
+from db.base import database
+from endpoints import user_list_get, user_post
+
 app = FastAPI()
-
-
-@app.get("/")
-async def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-async def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
+app.include_router(user_post.router, tags=["users"])
+app.include_router(user_list_get.router, tags=["users"])
 
 
 @app.on_event("startup")
