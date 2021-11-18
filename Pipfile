@@ -12,9 +12,12 @@ psycopg2-binary = "*"
 flake8 = "*"
 pydantic = {extras = ["email"], version = "*"}
 bcrypt = "*"
+asyncpg = "*"
 
 [dev-packages]
 pytest = "*"
+requests = "*"
+aiosqlite = "*"
 
 [requires]
 python_version = "*"
