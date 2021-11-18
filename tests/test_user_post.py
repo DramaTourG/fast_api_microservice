@@ -6,7 +6,7 @@ from repositories.users_repo import UserRepo
 
 def test_user_post(test_app, monkeypatch):
     test_request_user = {"username": "string", "email": "user@example.com", "password": "stringst"}
-    test_response_user = {"id": "1", "username": "string", "email": "user@example.com",
+    test_response_user = {"id": 1, "username": "string", "email": "user@example.com",
                           "register_date": datetime.utcnow().isoformat()}
 
     async def mock_post(*args, **kwargs):

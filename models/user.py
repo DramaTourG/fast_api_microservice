@@ -4,7 +4,7 @@ from pydantic import BaseModel, EmailStr, constr
 
 
 class UserOut(BaseModel):
-    id: Optional[str] = None
+    id: Optional[int] = None
     username: str
     email: EmailStr
     register_date: datetime
