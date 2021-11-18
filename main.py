@@ -2,11 +2,12 @@ from fastapi import FastAPI
 import uvicorn
 
 from db.base import database
-from endpoints import user_list_get, user_post
+from endpoints import user_list_get, user_post, user_put
 
 app = FastAPI()
 app.include_router(user_post.router, tags=["users"])
 app.include_router(user_list_get.router, tags=["users"])
+app.include_router(user_put.router, tags=["users"])
 
 
 @app.on_event("startup")
