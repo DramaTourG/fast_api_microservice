@@ -45,7 +45,6 @@ class UserRepo(BaseRepo):
         query = Users.update().filter_by(id=user_id)
         await self.database.execute(query=query, values=values)
         values['id'] = user_id
-        print(f'\n\n\n {values} \n\n\n')
         return values
 
     async def update_password(self):
