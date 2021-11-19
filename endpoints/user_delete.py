@@ -11,4 +11,4 @@ async def delete_user(user_id: int,
                       users: UserRepo = Depends(get_user_repository),
                       verification: bool = Depends(verify_user)):
     if verification:
-        return await users.delete(user_id=user_id)
+        return {"id": await users.delete(user_id=user_id)}
