@@ -1,5 +1,4 @@
 import asyncio
-from sqlite3 import IntegrityError
 
 import pytest
 from fastapi import HTTPException
@@ -22,7 +21,7 @@ update_user = UserIn(username="TestUser3", email="TESTuser3@example.com", passwo
 def test_create(test_user_repo):
     response1 = asyncio.run(test_user_repo.create(user1))
     response2 = asyncio.run(test_user_repo.create(user2))
-    with pytest.raises(IntegrityError):
+    with pytest.raises(HTTPException):
         asyncio.run(test_user_repo.create(user1))
     assert response1['id'] == 1
     assert response1['email'] == "TESTuser@example.com"
