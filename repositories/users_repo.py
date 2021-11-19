@@ -39,7 +39,7 @@ class UserRepo(BaseRepo):
         if user is not None:
             return UserIn.parse_obj(user)
 
-    async def update_all(self, user_id: int, user: UserIn):
+    async def update(self, user_id: int, user: UserIn):
         values = dict(**user.dict())
         values['password'] = password_hashing(values['password'])
         query = Users.update().filter_by(id=user_id)

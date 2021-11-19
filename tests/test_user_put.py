@@ -20,7 +20,7 @@ def test_user_put(test_app, monkeypatch, header):
     async def mock_put(*args, **kwargs):
         return test_response_user
 
-    monkeypatch.setattr(UserRepo, "update_all", mock_put)
+    monkeypatch.setattr(UserRepo, "update", mock_put)
 
     response = test_app.put("/user/1", headers=header(test_response_user, monkeypatch),
                             data=json.dumps(test_request_user))

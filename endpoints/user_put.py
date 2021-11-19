@@ -12,4 +12,4 @@ async def update_user(user_id: int, u: UserIn,
                       users: UserRepo = Depends(get_user_repository),
                       verification: bool = Depends(verify_user)):
     if verification:
-        return await users.update_all(user_id=user_id, user=u)
+        return await users.update(user_id=user_id, user=u)

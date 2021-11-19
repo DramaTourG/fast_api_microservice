@@ -49,7 +49,7 @@ def test_get_by_id(test_user_repo):
 
 
 def test_update_all(test_user_repo):
-    response = asyncio.run(test_user_repo.update_all(2, update_user))
+    response = asyncio.run(test_user_repo.update(2, update_user))
     assert response['email'] == 'TESTuser3@example.com'
     assert response['username'] == 'TestUser3'
     assert response['id'] == 2
