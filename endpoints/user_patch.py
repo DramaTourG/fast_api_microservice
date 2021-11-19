@@ -8,8 +8,8 @@ router = APIRouter(dependencies=[Depends(get_user_from_token)])
 
 
 @router.patch("/user/{user_id}", response_model=UserFields)
-async def update_user(user_id: int, fields: UserFields,
-                      users: UserRepo = Depends(get_user_repository),
-                      verification: bool = Depends(verify_user)):
+async def update_user_fields(user_id: int, fields: UserFields,
+                             users: UserRepo = Depends(get_user_repository),
+                             verification: bool = Depends(verify_user)):
     if verification:
         return await users.update_required_fields(user_id=user_id, fields=fields)
