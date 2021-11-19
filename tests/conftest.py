@@ -25,20 +25,22 @@ def test_database():
     yield database
 
 
-@pytest.fixture(scope='module')
-def header():
-    def _post_user(user, monkeypatch):
-        token = create_access_token({"sub": user["email"]})
+@pytest.fixture()
+def header(monkeypatch):
+    user = {"id": 1,
+            "username": "string",
+            "email": "user@example.com",
+            "password": "$stringst"}
+    token = create_access_token({"sub": user["email"]})
 
-        async def mock_get_by_email(*args, **kwargs):
-            return UserIn.parse_obj(user)
+    async def mock_get_by_email(*args, **kwargs):
+        return UserIn.parse_obj(user)
 
-        monkeypatch.setattr(UserRepo, "get_by_email", mock_get_by_email)
+    monkeypatch.setattr(UserRepo, "get_by_email", mock_get_by_email)
 
-        async def mock_get_by_id(*args, **kwargs):
-            return UserOut.parse_obj(user)
+    async def mock_get_by_id(*args, **kwargs):
+        return UserOut.parse_obj(user)
 
-        monkeypatch.setattr(UserRepo, "get_by_id", mock_get_by_id)
+    monkeypatch.setattr(UserRepo, "get_by_id", mock_get_by_id)
 
-        return {"Authorization": "Bearer " + token}
-    return _post_user
+    yield {"Authorization": "Bearer " + token}

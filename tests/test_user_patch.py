@@ -3,14 +3,9 @@ import json
 from models.user_models import UserFields
 from repositories.users_repo import UserRepo
 
-test_user = {"id": 1,
-             "username": "string",
-             "email": "user@example.com",
-             "password": "$stringst"}
 
-
-def test_user_patch_invalid_json(test_app, monkeypatch, header):
-    response = test_app.patch("/user/1", headers=header(test_user, monkeypatch),
+def test_user_patch_invalid_json(test_app, header):
+    response = test_app.patch("/user/1", headers=header,
                               data=json.dumps({"email": "string"}))
     assert response.status_code == 422
 
@@ -24,7 +19,7 @@ def test_user_patch(test_app, monkeypatch, header):
 
     monkeypatch.setattr(UserRepo, "update_required_fields", mock_patch)
 
-    response = test_app.patch("/user/1", headers=header(test_user, monkeypatch),
+    response = test_app.patch("/user/1", headers=header,
                               data=json.dumps(request_fields))
 
     assert response.status_code == 200
