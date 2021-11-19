@@ -11,15 +11,16 @@ def get_user_repository() -> UserRepo:
 
 
 async def get_current_user(
-        users: UserRepo = Depends(get_user_repository()),
-        token: str = Depends(JWTBearer)) -> UserIn:
+        users: UserRepo = Depends(get_user_repository),
+        token: str = Depends(JWTBearer())) -> UserIn:
     credentials_exc = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Invalid credentials')
+    credentials_exc1 = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Invalid credentials1')
     payload = decode_access_token(token)
     if payload is None:
         raise credentials_exc
     email = payload.get("sub")
     if email is None:
-        raise credentials_exc
+        raise credentials_exc1
     user = await users.get_by_email(email)
     if user is None:
         raise credentials_exc

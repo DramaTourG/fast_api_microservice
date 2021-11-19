@@ -3,7 +3,10 @@ from databases import Database
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 
+from core.security import create_access_token
 from main import app
+from models.user_models import UserOut, UserIn
+from repositories.users_repo import UserRepo
 
 
 @pytest.fixture(scope="module")
@@ -20,3 +23,22 @@ def test_database():
     metadata.create_all(bind=engine)
     database = Database('sqlite:///db/test_db.sqlite', force_rollback=True)
     yield database
+
+
+@pytest.fixture(scope='module')
+def header():
+    def _post_user(user, monkeypatch):
+        token = create_access_token({"sub": user["email"]})
+
+        async def mock_get_by_email(*args, **kwargs):
+            return UserIn.parse_obj(user)
+
+        monkeypatch.setattr(UserRepo, "get_by_email", mock_get_by_email)
+
+        async def mock_get_by_id(*args, **kwargs):
+            return UserOut.parse_obj(user)
+
+        monkeypatch.setattr(UserRepo, "get_by_id", mock_get_by_id)
+
+        return {"Authorization": "Bearer " + token}
+    return _post_user
