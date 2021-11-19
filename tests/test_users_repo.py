@@ -3,7 +3,7 @@ from sqlite3 import IntegrityError
 
 import pytest
 
-from models.user_models import UserIn, UserOut
+from models.user_models import UserIn, UserOut, UserFields
 from repositories.users_repo import UserRepo
 
 
@@ -60,3 +60,23 @@ def test_get_by_email(test_user_repo):
     user = dict(**res.dict())
     assert type(res) == UserIn
     assert user['username'] == "TestUser3"
+
+
+def test_update_one_required_field(test_user_repo):
+    fields = UserFields(username="TestUser4")
+    res = asyncio.run(test_user_repo.update_required_fields(user_id=2, fields=fields))
+    res2 = asyncio.run(test_user_repo.get_by_id(2))
+    assert res == UserFields(id=2, username='TestUser4', email=None, password=None)
+    assert res2.id == 2
+    assert res2.username == 'TestUser4'
+    assert res2.email == 'TESTuser3@example.com'
+
+
+def test_update_two_required_fields(test_user_repo):
+    fields = UserFields(username="TestUser5", id=5)
+    res = asyncio.run(test_user_repo.update_required_fields(user_id=2, fields=fields))
+    res2 = asyncio.run(test_user_repo.get_by_id(5))
+    assert res == UserFields(id=5, username='TestUser5', email=None, password=None)
+    assert res2.id == 5
+    assert res2.username == 'TestUser5'
+    assert res2.email == 'TESTuser3@example.com'
