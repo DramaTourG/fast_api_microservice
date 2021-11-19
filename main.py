@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 
+from core.config import ORIGINS
 from db.base import database
 from endpoints import user_list_get, user_post, user_put, auth, user_patch, user_delete
 
@@ -21,6 +23,15 @@ async def startup():
 @app.on_event("shutdown")
 async def shutdown():
     await database.disconnect()
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 if __name__ == '__main__':

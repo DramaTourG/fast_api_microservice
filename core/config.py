@@ -8,3 +8,4 @@ DATABASE_URL = config(
 ACCESS_TOKEN_EXPIRE_HOURS = 20
 ALGORITHM = "HS256"
 SECRET_KEY = config("SECRET_KEY", cast=str, default="N0tASecretKey")
+ORIGINS = config("SECRET_KEY", cast=list, default=["http://localhost", "http://localhost:8080"])
