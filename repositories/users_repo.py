@@ -7,6 +7,7 @@ from core.security import password_hashing
 from db.users import Users
 from models.user_models import UserIn, UserOut, UserFields
 from .base import BaseRepo
+from .db_exceptions_decorator import db_error_handler
 
 
 class UsersException(Exception):
@@ -15,6 +16,7 @@ class UsersException(Exception):
 
 class UserRepo(BaseRepo):
     """CRUD"""
+    @db_error_handler
     async def create(self, user: UserIn):
         values = dict(**user.dict())
         values['password'] = password_hashing(values['password'])
@@ -23,22 +25,26 @@ class UserRepo(BaseRepo):
         values['id'] = await self.database.execute(query=query, values=values)
         return values
 
+    @db_error_handler
     async def get_all(self) -> List[UserOut]:
         users = select(Users)
         return await self.database.fetch_all(users)
 
+    @db_error_handler
     async def get_by_id(self, user_id: int) -> UserOut:
         user_query = select(Users).filter_by(id=user_id)
         user = await self.database.fetch_one(user_query)
         if user is not None:
             return UserOut.parse_obj(user)
 
+    @db_error_handler
     async def get_by_email(self, email: str) -> UserIn:
         user_query = select(Users).filter_by(email=email)
         user = await self.database.fetch_one(user_query)
         if user is not None:
             return UserIn.parse_obj(user)
 
+    @db_error_handler
     async def update(self, user_id: int, user: UserIn):
         values = dict(**user.dict())
         values['password'] = password_hashing(values['password'])
@@ -48,6 +54,7 @@ class UserRepo(BaseRepo):
         values['id'] = user_id
         return values
 
+    @db_error_handler
     async def update_required_fields(self, user_id: int, fields: UserFields) -> UserFields:
         values = dict(**fields.dict())
         values = {key: val for key, val in values.items() if val is not None}
@@ -60,6 +67,7 @@ class UserRepo(BaseRepo):
             values['id'] = user_id
         return UserFields.parse_obj(values)
 
+    @db_error_handler
     async def delete(self, user_id):
         query = Users.delete().filter_by(id=user_id)
         if await self.database.execute(query=query) == 0:
