@@ -14,3 +14,10 @@ class UserIn(BaseModel):
     username: constr(min_length=1, max_length=40)
     email: EmailStr
     password: constr(min_length=8, max_length=100)
+
+
+class UserFields(BaseModel):
+    id: Optional[int] = None
+    username: Optional[constr(min_length=1, max_length=40)] = None
+    email: Optional[EmailStr] = None
+    password: Optional[constr(min_length=8, max_length=100)] = None

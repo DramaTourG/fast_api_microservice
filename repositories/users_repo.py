@@ -5,7 +5,7 @@ from sqlalchemy import select
 
 from core.security import password_hashing
 from db.users import Users
-from models.user_models import UserIn, UserOut
+from models.user_models import UserIn, UserOut, UserFields
 from .base import BaseRepo
 
 
@@ -47,8 +47,16 @@ class UserRepo(BaseRepo):
         values['id'] = user_id
         return values
 
-    async def update_password(self):
-        return
+    async def update_required_fields(self, user_id: int, fields: UserFields) -> UserFields:
+        values = dict(**fields.dict())
+        values = {key: val for key, val in values.items() if val is not None}
+        if 'password' in values:
+            values['password'] = password_hashing(values['password'])
+        query = Users.update().filter_by(id=user_id)
+        await self.database.execute(query=query, values=values)
+        if 'id' not in values:
+            values['id'] = user_id
+        return UserFields.parse_obj(values)
 
     async def delete(self, user_id):
         return
