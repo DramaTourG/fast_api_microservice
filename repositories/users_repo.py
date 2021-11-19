@@ -43,7 +43,7 @@ class UserRepo(BaseRepo):
         values = dict(**user.dict())
         values['password'] = password_hashing(values['password'])
         query = Users.update().filter_by(id=user_id)
-        if not await self.database.execute(query=query, values=values):
+        if await self.database.execute(query=query, values=values) == 0:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Bad request')
         values['id'] = user_id
         return values
@@ -54,7 +54,7 @@ class UserRepo(BaseRepo):
         if 'password' in values:
             values['password'] = password_hashing(values['password'])
         query = Users.update().filter_by(id=user_id)
-        if not await self.database.execute(query=query, values=values):
+        if await self.database.execute(query=query, values=values) == 0:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Bad request')
         if 'id' not in values:
             values['id'] = user_id
@@ -62,6 +62,6 @@ class UserRepo(BaseRepo):
 
     async def delete(self, user_id):
         query = Users.delete().filter_by(id=user_id)
-        if not await self.database.execute(query=query):
+        if await self.database.execute(query=query) == 0:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Bad request')
         return user_id
