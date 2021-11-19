@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List
-
+from fastapi import HTTPException, status
 from sqlalchemy import select
 
 from core.security import password_hashing
@@ -43,7 +43,8 @@ class UserRepo(BaseRepo):
         values = dict(**user.dict())
         values['password'] = password_hashing(values['password'])
         query = Users.update().filter_by(id=user_id)
-        await self.database.execute(query=query, values=values)
+        if not await self.database.execute(query=query, values=values):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Bad request')
         values['id'] = user_id
         return values
 
@@ -53,10 +54,14 @@ class UserRepo(BaseRepo):
         if 'password' in values:
             values['password'] = password_hashing(values['password'])
         query = Users.update().filter_by(id=user_id)
-        await self.database.execute(query=query, values=values)
+        if not await self.database.execute(query=query, values=values):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Bad request')
         if 'id' not in values:
             values['id'] = user_id
         return UserFields.parse_obj(values)
 
     async def delete(self, user_id):
-        return
+        query = Users.delete().filter_by(id=user_id)
+        if not await self.database.execute(query=query):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Bad request')
+        return user_id

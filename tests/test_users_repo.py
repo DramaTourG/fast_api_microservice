@@ -2,6 +2,7 @@ import asyncio
 from sqlite3 import IntegrityError
 
 import pytest
+from fastapi import HTTPException
 
 from models.user_models import UserIn, UserOut, UserFields
 from repositories.users_repo import UserRepo
@@ -80,3 +81,18 @@ def test_update_two_required_fields(test_user_repo):
     assert res2.id == 5
     assert res2.username == 'TestUser5'
     assert res2.email == 'TESTuser3@example.com'
+
+
+def test_delete_user(test_user_repo):
+    res = asyncio.run(test_user_repo.delete(1))
+    assert res == 1
+
+
+def test_delete_deleted_user(test_user_repo):
+    with pytest.raises(HTTPException):
+        asyncio.run(test_user_repo.delete(1))
+
+
+def test_get_by_incorrect_id(test_user_repo):
+    res = asyncio.run(test_user_repo.get_by_id(1))
+    assert res is None

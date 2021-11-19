@@ -28,4 +28,4 @@ def test_user_patch(test_app, monkeypatch, header):
                               data=json.dumps(request_fields))
 
     assert response.status_code == 200
-    assert response.json() == {'id': 1, 'username': 'TestUser5', 'email': None, 'password': None}
+    assert response.json() == {'id': 1, 'username': 'TestUser5', 'email': None}
