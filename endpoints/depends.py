@@ -10,7 +10,7 @@ def get_user_repository() -> UserRepo:
     return UserRepo(database)
 
 
-async def get_current_user(
+async def get_user_from_token(
         users: UserRepo = Depends(get_user_repository),
         token: str = Depends(JWTBearer())) -> UserIn:
     credentials_exc = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Invalid credentials')
@@ -25,3 +25,14 @@ async def get_current_user(
     if user is None:
         raise credentials_exc
     return user
+
+
+async def verify_user(
+        user_id: int,
+        users: UserRepo = Depends(get_user_repository),
+        token_user: UserIn = Depends(get_user_from_token)
+) -> bool:
+    user = await users.get_by_id(user_id=int(user_id))
+    if user is None or user.email != token_user.email:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User not found')
+    return True
