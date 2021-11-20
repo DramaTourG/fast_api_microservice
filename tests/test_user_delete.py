@@ -1,7 +1,7 @@
 from repositories.users_repo import UserRepo
 
 
-def test_user_patch(test_app, monkeypatch, header):
+def test_user_delete(test_app, monkeypatch, header):
 
     async def mock_delete(*args, **kwargs):
         return 1
